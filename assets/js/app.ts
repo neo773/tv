@@ -253,9 +253,27 @@ const Hooks = {
         if (this.playerId === "video-player") {
           this.pushEventTo("#clipper", "video_loaded", { id: opts.id });
         }
+
+        if (this.player.muted) {
+          const muteOverlay = document.getElementById(`mute-overlay-${opts.player_id}`);
+          if (muteOverlay) {
+            muteOverlay.classList.remove("hidden");
+          }
+        }
       };
 
       this.handleEvent("play_video", playVideo);
+
+      this.handleEvent("unmute_video", (payload) => {
+        const video = document.getElementById(payload.player_id) as HTMLVideoElement;
+        if (video) {
+          video.muted = false;
+          const muteOverlay = document.getElementById(`mute-overlay-${payload.player_id}`);
+          if (muteOverlay) {
+            muteOverlay.classList.add("hidden");
+          }
+        }
+      });
     },
   },
   Chat: {

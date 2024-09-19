@@ -7,13 +7,26 @@ defmodule AlgoraWeb.PlayerComponent do
   @impl true
   def render(assigns) do
     ~H"""
-    <video
-      id={@id}
-      phx-hook="VideoPlayer"
-      class="h-full w-full flex-1 rounded-lg lg:rounded-2xl overflow-hidden"
-      controls
-      data-media-player
-    />
+    <div class="relative">
+      <video
+        id={@id}
+        phx-hook="VideoPlayer"
+        class="h-full w-full flex-1 rounded-lg lg:rounded-2xl overflow-hidden"
+        controls
+        data-media-player
+      />
+      <div
+        id={"mute-overlay-#{@id}"}
+        class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer hidden"
+        phx-click="unmute"
+        phx-target={@myself}
+      >
+        <svg class="w-24 h-24 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+        </svg>
+      </div>
+    </div>
     """
   end
 
@@ -55,5 +68,10 @@ defmodule AlgoraWeb.PlayerComponent do
     {:ok,
      socket
      |> assign(:id, assigns[:id])}
+  end
+
+  @impl true
+  def handle_event("unmute", _params, socket) do
+    {:noreply, push_event(socket, "unmute_video", %{player_id: socket.assigns.id})}
   end
 end
