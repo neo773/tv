@@ -9,7 +9,7 @@ defmodule AlgoraWeb.SignInLive do
           Algora TV
         </h2>
         <a
-          href={Algora.Github.authorize_url()}
+          href={Algora.Github.authorize_url(assigns.return_to)}
           class="mt-8 w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-400"
         >
           Sign in with GitHub
@@ -19,7 +19,7 @@ defmodule AlgoraWeb.SignInLive do
     """
   end
 
-  def mount(_params, _session, socket) do
-    {:ok, socket}
+  def mount(params, _session, socket) do
+    {:ok, assign(socket, return_to: params["return_to"])}
   end
 end
